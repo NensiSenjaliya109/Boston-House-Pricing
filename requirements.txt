@@ -4,3 +4,5 @@ matplotlib
 matplotlib-inline
 scikit-learn
 seaborn
+
+Flask

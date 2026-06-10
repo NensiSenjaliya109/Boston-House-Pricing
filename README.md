@@ -1,5 +1,17 @@
 # Boston House Price Prediction
 
+## Tools Requirements
+
+- Python 3.8+
+- pip
+- virtualenv (optional)
+- Jupyter Notebook
+- Required Python packages listed in `requirements.txt`
+## Create a new Invirnment
+```bash
+conda create -p venv python==3.7 -y
+```
+
 ## Project Overview
 This project builds a simple regression model to predict house prices using the classic **Boston Housing** dataset. The workflow demonstrates typical steps in a machine‑learning pipeline, from data loading to model persistence.
 
