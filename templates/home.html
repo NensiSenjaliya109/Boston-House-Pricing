@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boston House Price Prediction</title>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1e3c72, #2a5298);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --primary: #0066ff;
+            --primary-hover: #0044cc;
+            --text-dark: #1a1a1a;
+            --text-light: #ffffff;
+            --radius: 12px;
+            --shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem 2.5rem;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f0f8ff;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            color: var(--text-dark);
+            font-weight: 600;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Boston House Price Prediction</h1>
+        <form action="{{ url_for('predict_api') }}" method="post">
+            <!-- Adjust these inputs to match the features your model expects -->
+            <div class="form-group">
+                <label for="rm">Average number of rooms (RM)</label>
+                <input type="number" step="any" name="rm" id="rm" required />
+            </div>
+            <div class="form-group">
+                <label for="lstat">Lower status of the population (LSTAT)</label>
+                <input type="number" step="any" name="lstat" id="lstat" required />
+            </div>
+            <div class="form-group">
+                <label for="ptratio">Pupil‑teacher ratio (PTRATIO)</label>
+                <input type="number" step="any" name="ptratio" id="ptratio" required />
+            </div>
+            <button type="submit">Predict Price</button>
+        </form>
+        {% if prediction_text %}
+        <div class="result">
+            {{ prediction_text }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

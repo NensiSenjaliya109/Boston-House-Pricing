@@ -101,3 +101,6 @@ jupyter notebook implimentation.ipynb
 Open the notebook and execute the cells sequentially. The model will be trained, evaluated, and saved. You can later reload the model and scaler with `pickle.load` to make predictions on new data.
 
 ---
+
+## Recent Fixes
+- **Missing Scaler in app.py**: Fixed a `NameError: name 'scaler' is not defined` issue by adding `scaler = pickle.load(open('scaler.pkl', 'rb'))` to `app.py`. The app now correctly loads and uses the saved scaler to transform inputs before making predictions.
