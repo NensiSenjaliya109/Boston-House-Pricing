@@ -2,7 +2,7 @@
 venv/
 __pycache__/
 *.pyc
-*.pkl
+# *.pkl (Commenting this out so regmodel.pkl and scaler.pkl go to GitHub)
 *.ipynb_checkpoints
 
 # OS specific files
