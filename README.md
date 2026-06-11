@@ -1,106 +1,68 @@
 # Boston House Price Prediction
 
-## Tools Requirements
+🚀 **Live Application:** [https://boston-house-pricing-x2tj.onrender.com/](https://boston-house-pricing-x2tj.onrender.com/)
 
-- Python 3.8+
-- pip
-- virtualenv (optional)
-- Jupyter Notebook
-- Required Python packages listed in `requirements.txt`
-## Create a new Invirnment
-```bash
-conda create -p venv python==3.7 -y
-```
 
-## Project Overview
-This project builds a simple regression model to predict house prices using the classic **Boston Housing** dataset. The workflow demonstrates typical steps in a machine‑learning pipeline, from data loading to model persistence.
+## 🚀 Project Overview
+This project is an end-to-end Machine Learning web application that predicts the price of houses in Boston based on various features. It uses a Linear Regression model trained on the classic Boston Housing dataset. Users can interact with a sleek, user-friendly web interface to input parameters (like the number of rooms or pupil-teacher ratio) and instantly receive a predicted house price.
 
-## Steps Implemented
-1. **Load the dataset**
-   ```python
-   from sklearn.datasets import fetch_openml
-   boston = fetch_openml(name="Boston", version=1, as_frame=True)
-   ```
-   - Loaded into a Pandas DataFrame (`boston.data`).
-   - Target variable stored in `boston.target`.
+## ⚙️ How it Works
+1. **The Machine Learning Model**: A `LinearRegression` model is trained on historical housing data using `scikit-learn`. The input features are mathematically standardized using a `StandardScaler` to improve the model's accuracy.
+2. **Model Serialization**: Both the trained model (`regmodel.pkl`) and the scaler (`scaler.pkl`) are saved to the hard drive using Python's `pickle` library. This allows the web app to use the model instantly without having to retrain it every time the server starts.
+3. **The Web Application**: A lightweight **Flask** web server (`app.py`) loads the saved model and scaler. When a user submits data through the HTML form on the website (`home.html`), the Flask app captures the input, scales it, passes it through the model, and renders the predicted price back onto the webpage using Jinja templating.
 
-2. **Feature selection**
-   - Selected a subset of features (e.g., `['RM', 'LSTAT', 'PTRATIO']`).
-   - Adjust this list to match the columns you actually used.
+## 🧠 What I Learned
+By building this project from scratch, I gained hands-on experience in several crucial areas of software engineering and data science:
+- **Machine Learning Pipelines**: Loading data, train-test splitting, feature scaling, model training, and evaluating accuracy metrics (MAE, MSE, RMSE, R²).
+- **Backend Integration**: Saving trained ML models into `.pkl` files and successfully connecting them to a live backend server.
+- **Web Development (Flask)**: Building routing logic (`@app.route`), handling HTTP `POST` requests, and linking Python logic to HTML frontends.
+- **Containerization (Docker)**: Writing a `Dockerfile` to package the entire application, its code, and its dependencies into a single, isolated container. This completely eliminates the "it works on my machine" problem!
+- **Cloud Deployment**: Using **Render** to automatically build and host the Dockerized application live on the internet directly from a GitHub repository.
 
-3. **Train‑test split**
-   ```python
-   from sklearn.model_selection import train_test_split
-   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-   ```
-
-4. **Scaling**
-   ```python
-   from sklearn.preprocessing import StandardScaler
-   scaler = StandardScaler()
-   scaler.fit(X_train)
-   ```
-   - The scaler is later saved to `scaler.pkl`.
-
-5. **Model training**
-   ```python
-   from sklearn.linear_model import LinearRegression
-   model = LinearRegression()
-   model.fit(X_train, y_train)
-   ```
-   - The trained model is saved to `regmodel.pkl`.
-
-6. **Model persistence**
-   ```python
-   import pickle
-   with open('regmodel.pkl', 'wb') as f:
-       pickle.dump(model, f)
-   with open('scaler.pkl', 'wb') as f:
-       pickle.dump(scaler, f)
-   ```
-
-7. **Evaluation metrics**
-   ```python
-   from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-   mae = mean_absolute_error(y_test, reg_pred)
-   mse = mean_squared_error(y_test, reg_pred)
-   rmse = np.sqrt(mse)
-   r2 = r2_score(y_test, reg_pred)
-   # Adjusted R² (only if n > p + 1)
-   n = len(y_test)
-   p = X_test.shape[1]
-   adj_r2 = 1 - (1 - r2) * (n - 1) / (n - p - 1) if (n - p - 1) > 0 else float('nan')
-   ```
-   - Printed MAE, MSE, RMSE, R² and Adjusted R².
-
-8. **Making a prediction on a new sample**
-   ```python
-   sample = X[0].reshape(1, -1)               # raw sample
-   scaled = scaler.transform(sample)          # apply same scaling
-   pred = model.predict(scaled)
-   print(f"Prediction for first house: {pred[0]:.3f}")
-   ```
-
-## Files Created
-- `regmodel.pkl` – Serialized LinearRegression model.
-- `scaler.pkl`   – Serialized StandardScaler used during training.
-- `README.md`    – This documentation file.
-
-## How to Run
-```bash
-# Activate virtual environment if not already active
-source venv/Scripts/activate   # Windows PowerShell
-
-# Install requirements (if needed)
-pip install -r requirements.txt
-
-# Launch the notebook
-jupyter notebook implimentation.ipynb
-```
-
-Open the notebook and execute the cells sequentially. The model will be trained, evaluated, and saved. You can later reload the model and scaler with `pickle.load` to make predictions on new data.
+## 🛠️ Tools & Requirements
+- Python 3.8+ (App is Dockerized with Python 3.11)
+- `scikit-learn`, `pandas`, `numpy`, `Flask`, `gunicorn`
+- Docker Desktop (for local container testing)
 
 ---
 
-## Recent Fixes
-- **Missing Scaler in app.py**: Fixed a `NameError: name 'scaler' is not defined` issue by adding `scaler = pickle.load(open('scaler.pkl', 'rb'))` to `app.py`. The app now correctly loads and uses the saved scaler to transform inputs before making predictions.
+## 💻 Local Setup & Installation
+
+### Option 1: Running with Python (Virtual Environment)
+```bash
+# 1. Create and activate a virtual environment
+conda create -p venv python=3.8 -y
+conda activate ./venv
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the application
+python app.py
+```
+*Note: Open your browser and go to `http://localhost:5000`*
+
+### Option 2: Running with Docker (Recommended)
+```bash
+# 1. Build the Docker image
+docker build -t house-price-app .
+
+# 2. Run the Docker container
+docker run -p 5000:5000 house-price-app
+```
+*Note: Open your browser and go to `http://localhost:5000`*
+
+---
+
+## ☁️ Cloud Deployment (Render)
+This project is configured to be easily deployed on [Render.com](https://render.com) using Docker:
+1. Push the code (including `.pkl` files) to a GitHub repository.
+2. Create a new **Web Service** on Render and connect the repository.
+3. Set the Runtime to **Docker**.
+4. Click **Deploy**. Render automatically builds the container using the included `Dockerfile` and serves it live to the public.
+
+---
+
+## 🐛 Recent Fixes & Troubleshooting
+- **NumPy Compatibility (`numpy._core`)**: Upgraded the Dockerfile base image to `python:3.11-slim` to fix a `ModuleNotFoundError` caused by version mismatches between the host machine (which trained the model using a newer NumPy version) and the container.
+- **Missing Scaler in app.py**: Fixed a `NameError: name 'scaler' is not defined` issue by ensuring `scaler = pickle.load(open('scaler.pkl', 'rb'))` is executed before any predictions are made.
